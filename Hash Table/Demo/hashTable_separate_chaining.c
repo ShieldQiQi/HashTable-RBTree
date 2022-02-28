@@ -18,14 +18,8 @@ struct dataItem* sc_searchNode(int key)
         if(temp->key == key)
         {
             return temp;
-        } else {
-            if(temp->next != NULL)
-            {
-                temp = temp->next;
-            }else {
-                return NULL;
-            }
         }
+        temp = temp->next;
     }
     return NULL;
 }
@@ -37,14 +31,7 @@ int sc_insertNode(struct dataItem* item)
         return false;
 
     int hashIndex = hashCode(item->key);
-    struct dataItem* temp = hashArray[hashIndex];
-    struct dataItem* preTemp = temp;
-    while(temp != NULL)
-    {
-        preTemp = temp;
-        temp = temp->next;
-    }
-    if(preTemp == NULL)
+    if(hashArray[hashIndex]==NULL)
     {
         hashArray[hashIndex] = (struct dataItem*)malloc(sizeof(struct dataItem));
         hashArray[hashIndex]->key = item->key;
@@ -52,10 +39,16 @@ int sc_insertNode(struct dataItem* item)
         hashArray[hashIndex]->next = NULL;
         return true;
     }
-    preTemp->next = (struct dataItem*)malloc(sizeof(struct dataItem));
-    preTemp->next->key = item->key;
-    preTemp->next->value = item->value;
-    preTemp->next->next = NULL;
+
+    struct dataItem* temp = hashArray[hashIndex];
+    while(temp->next != NULL)
+    {
+        temp = temp->next;
+    }
+    temp->next = (struct dataItem*)malloc(sizeof(struct dataItem));
+    temp->next->key = item->key;
+    temp->next->value = item->value;
+    temp->next->next = NULL;
     return true;
 }
 
